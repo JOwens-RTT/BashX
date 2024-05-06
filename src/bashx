@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Source all library files
+for file in $(dirname $0)/../lib/*.sh; do
+  source $file
+done

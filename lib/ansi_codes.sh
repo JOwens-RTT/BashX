@@ -74,11 +74,6 @@ getColor() {
   echo "$gv_getColor_RETURN"
 }
 
-f_setFormat_HELP()
-{
-  ""
-}
-
 gv_setFormat_RETURN=
 setFormat() {
   local lc_HELP=$(cat <<EOF
@@ -87,7 +82,7 @@ usage: setFormat [SWITCHES] [OPTIONS]
   For Ubuntu based systems, this does not work with echo. Use printf instead. Also the format code is only
   valid when used in the first argument. Subsequent arguments will print the code as plain text instead of applying it.
   Note that not all formatting options will be available on your system. Use this help section to determine what your
-  application is capable of utilizing. For details see: https://en.wikipedia.org/wiki/ANSI_escape_code
+  terminal application is capable of utilizing. For details see: https://en.wikipedia.org/wiki/ANSI_escape_code
   This function will decrease performance if used in excess. It may become necessary to use this function as a code
   lookup tool by printing the result to screen so you can hard code the value into a static string.
 
@@ -178,7 +173,7 @@ EOF
   local lv_INVERT="${args_SWITCHES["v"]:-0}"
   local lv_HIDE="${args_SWITCHES["d"]:-0}"
   local lv_CROSS_OUT="${args_SWITCHES["c"]:-0}"
-  local lv_FONT="${args_OPTIONS['font']:-0}"
+  local lv_FONT="${args_OPTIONS['font']:-1}"
   local lv_GOTHIC="${args_SWITCHES["g"]:-0}"
   local lv_PROPRTIONAL_SPACING="${args_SWITCHES["p"]:-0}"
   local lv_FOREGROUND_COLOR="${args_OPTIONS["foreground-color"]:-'NONE'}"
@@ -197,12 +192,14 @@ EOF
   local lv_SUBSCRIPT="${args_SWITCHES["s"]:-0}"
   local lv_SHOW_PLAIN_HELP="${args_SWITCHES["!"]:-0}"
 
+  # Show plain text help if requested
+    if [[ "$lv_SHOW_PLAIN_HELP" -eq 1 ]]; then
+      echo "$lc_HELP"
+      return 0
+    fi
+
   # Create a list of format specifiers from provided arguements
   local lv_SPEC=()
-  if [[ "$lv_SHOW_PLAIN_HELP" -eq 1 ]]; then
-    echo "$lc_HELP"
-    return 0
-  fi
 
   # Apply switch codes
   if [[ "$lv_BOLD" -eq 1 ]]; then lv_SPEC+=("1"); fi
